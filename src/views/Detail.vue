@@ -2,17 +2,28 @@
   <div>
     <!-- 头部 -->
     <div class="header">
-      <div class="left" @click="$router.back()">
+      <div
+        class="left"
+        @click="$router.back()"
+      >
         <i class="iconfont iconjiantou2"></i>
       </div>
       <div class="center">
         <i class="iconfont iconnew"></i>
       </div>
       <div class="right">
-        <div @click="unfollow" v-if="detail.has_follow" class="follow">
+        <div
+          @click="unfollow"
+          v-if="detail.has_follow"
+          class="follow"
+        >
           已关注
         </div>
-        <div @click="follow()" v-else class="follow">关注</div>
+        <div
+          @click="follow()"
+          v-else
+          class="follow"
+        >关注</div>
       </div>
     </div>
     <!-- 内容 -->
@@ -32,13 +43,27 @@
         v-html="detail.content"
       ></div>
       <!-- 2. 视频 -->
-      <video v-else :src="detail.content" controls></video>
+      <video
+        v-else
+        :src="detail.content"
+        controls
+      ></video>
       <!-- 点赞 -->
       <div class="bottom">
-        <div @click="like" class="like" :class="{ active: detail.has_like }">
+        <div
+          @click="like"
+          class="like"
+          :class="{ active: detail.has_like }"
+        >
           <i class="iconfont icondianzan"></i>
           <i>{{ detail.like_length }}</i>
         </div>
+      </div>
+      <!-- comment功能 -->
+      <div class="comments">
+        <!-- 创建组件 -->
+        <hm-comment></hm-comment>
+
       </div>
     </div>
   </div>
@@ -46,23 +71,23 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       detail: {}, // 详情页信息
     }
   },
-  created() {
+  created () {
     this.getDetail()
   },
   methods: {
     // 获取详情页信息
-    async getDetail() {
+    async getDetail () {
       let res = await this.$axios.get(`/post/${this.$route.params.id}`)
       console.log('详情页信息', res.data.data)
       this.detail = res.data.data
     },
     // 取消关注
-    async unfollow() {
+    async unfollow () {
       //1. 请求
       let res = await this.$axios.get(`/user_unfollow/${this.detail.user.id}`)
 
@@ -74,7 +99,7 @@ export default {
       this.getDetail()
     },
     // 关注
-    async follow() {
+    async follow () {
       let token = localStorage.getItem('token')
       if (!token) {
         this.$toast('请先登录')
@@ -103,7 +128,7 @@ export default {
       }
     },
     // 点赞
-    async like() {
+    async like () {
       let token = localStorage.getItem('token')
       if (!token) {
         this.$toast('请登录')
@@ -212,5 +237,9 @@ video {
       color: red;
     }
   }
+}
+// 评论容器
+.comments {
+  border-top: 3px solid gray;
 }
 </style>
