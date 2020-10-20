@@ -19,11 +19,14 @@ import HmLogo from './components/HmLogo.vue'
 import HmButton from './components/HmButton.vue'
 import HmPost from './components/HmPost.vue'
 import HmComment from './components/HmComment.vue'
+import HmFloor from './components/HmFloor.vue' //楼层组件
+
 Vue.component('hm-post', HmPost)
 Vue.component('hm-header', HmHeader)
 Vue.component('hm-logo', HmLogo)
 Vue.component('hm-button', HmButton)
 Vue.component('hm-comment', HmComment) //评论组件
+Vue.component('hm-floor', HmFloor) //楼层组件
 // 方式三 : 全部 引入
 // import Vant from 'vant'
 // import 'vant/lib/index.css'
@@ -44,7 +47,9 @@ import {
 import { Tab, Tabs } from 'vant'
 import { PullRefresh } from 'vant'
 import { Sticky } from 'vant'
+import { Icon } from 'vant'
 
+Vue.use(Icon)
 Vue.use(Sticky)
 Vue.use(PullRefresh)
 Vue.use(Tab)

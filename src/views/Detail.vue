@@ -62,9 +62,47 @@
       <!-- comment功能 -->
       <div class="comments">
         <!-- 创建组件 -->
-        <hm-comment></hm-comment>
+        <hm-comment
+          :comments='item'
+          v-for="item in comments"
+          :key="item.id"
+        > </hm-comment>
 
       </div>
+      <!-- 底部组件 -->
+      <div class="send">
+        <!-- input  -->
+
+        <div
+          class="ipt"
+          v-if="!isShow"
+        >
+          <input
+            @focus="showTextArea"
+            type="text"
+            value="我是评论"
+            ref="input"
+          >
+          <van-icon
+            name="chat-o"
+            badge="99+"
+          />
+          <van-icon name="star-o" />
+        </div>
+        <!-- text  -->
+        <div
+          class="textarea"
+          v-if='isShow'
+        >
+          <keep-alive> <textarea
+              id=""
+              ref="area"
+              @blur="hideArea"
+            ></textarea></keep-alive>
+          <div class="right">发送</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -74,16 +112,18 @@ export default {
   data () {
     return {
       detail: {}, // 详情页信息
+      comments: [], //评论信息 
+      isShow: false
     }
   },
   created () {
     this.getDetail()
+    this.getComments()
   },
   methods: {
     // 获取详情页信息
     async getDetail () {
       let res = await this.$axios.get(`/post/${this.$route.params.id}`)
-      console.log('详情页信息', res.data.data)
       this.detail = res.data.data
     },
     // 取消关注
@@ -150,6 +190,27 @@ export default {
       // 重新 加载
       this.getDetail()
     },
+    async getComments () {
+      const res = await this.$axios.get(`/post_comment/${this.$route.params.id}`)
+      const { data, statusCode } = res.data
+      if (statusCode == 200) {
+        this.comments = data
+        console.log(this.comments);
+      }
+    },
+    // 显示textareae
+    showTextArea () {
+      this.isShow = true
+      this.$nextTick(() => {
+        // 获取dom元素 dom元素显示是异步进行的
+        this.$refs.area.focus()
+      })
+    },
+    // 失去焦点隐藏
+    hideArea () {
+      this.isShow = false
+
+    }
   },
 }
 </script>
@@ -241,5 +302,57 @@ video {
 // 评论容器
 .comments {
   border-top: 3px solid gray;
+}
+// 底部评论功能
+.send {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  background-color: blueviolet;
+  // 输入
+  .ipt {
+    height: 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    input {
+      height: 20px;
+      line-height: 20px;
+      border-radius: 10px;
+      border: none;
+      background-color: #ccc;
+    }
+    .van-icon {
+      font-size: 30px;
+    }
+  }
+  // 输出
+  .textarea {
+    padding: 5px 10px;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    textarea {
+      width: 200px;
+      flex: 1;
+      height: 50px;
+      border: 1px solid #000;
+      border-radius: 4px;
+    }
+    div {
+      margin: 0px 10px;
+      width: 70px;
+      height: 30px;
+      line-height: 30px;
+      border: 1px solid blue;
+      font-size: 20px;
+      line-height: 30px;
+      font-family: kaiti;
+      background-color: yellow;
+      border-radius: 15px;
+      text-align: center;
+    }
+  }
 }
 </style>
